@@ -1,14 +1,14 @@
 import { Injectable,UnauthorizedException } from '@nestjs/common';
-//import {JwtService} from '@nestjs/jwt'
+import {JwtService} from '@nestjs/jwt'
 import { UserService } from '../../user/user.service';
-import {User} from 'src/user/entities/user.entity'
+import {encryptPassword} from '../../common/crypto'
 @Injectable()
 export class AuthService {
     constructor(
-        //private readonly jwtService:JwtService,
+        private readonly jwtService:JwtService,
         private readonly userService:UserService
     ){
-        this.userService = userService;
+        // this.userService = userService;
     }
 
     // async createToken(user){
@@ -20,14 +20,41 @@ export class AuthService {
     //         //token:this.jwtService.sign(payload)
     //     }
     // }
-    async validate(username: string, password: string): Promise<User> {
+    async validateUser(username: string, password: string): Promise<any> {
+        console.log('JWT验证 - Step 2: 校验用户信息');
         const user = await this.userService.findAll(username);
         // 注：实际中的密码处理应通过加密措施
+        if(!user){
+          return {code:0,message:'查无此人'}
+        }
         if (user && user.password === password) {
           const { password, ...userInfo } = user;
-          return userInfo;
+          return {...userInfo,code:200,message:'success'};
         } else {
-          return null;
+          return {code:1,message:'密码错误'}
         }
       }
+
+      
+  // JWT验证 - Step 3: 处理 jwt 签证
+  async certificate(user: any) {
+    const payload = {
+      username: user.username,
+      sub: user.userId
+    };
+    console.log('JWT验证 - Step 3: 处理 jwt 签证');
+    try {
+      const token = this.jwtService.sign(payload);
+      return {
+        code: user.code,
+        token,
+        msg: user.message,
+      };
+    } catch (error) {
+      return {
+        code: 600,
+        msg: `账号或密码错误`,
+      };
+    }
+  }
 }

@@ -9,7 +9,6 @@ interface Data<T>{
 export class Respon<T> implements NestInterceptor{
         intercept(context, next: CallHandler):Observable<Data<T>>{
             return next.handle().pipe(map(data=>{
-                // console.log(data)
                 let result = JSON.parse(JSON.stringify(data));
                 Reflect.deleteProperty(result,'message')
                 Reflect.deleteProperty(result,'code')

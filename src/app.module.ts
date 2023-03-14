@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import { AuthModule } from './modules/auth/auth.module';
+import { UserController } from './user/user.controller';
+
 @Module({
   imports: [
     UserModule,
@@ -15,7 +17,7 @@ import { AuthModule } from './modules/auth/auth.module';
       host:'localhost',
       port:3306,
       database:'nuxtproject',
-      entities:[__dirname + '/**/*.tntry{.ts.js}'],
+      entities:[__dirname + '/**/*.entity{.ts.js}'],
       synchronize:true,
       retryDelay:500,
       retryAttempts:10,
@@ -23,7 +25,7 @@ import { AuthModule } from './modules/auth/auth.module';
 
     })
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController,UserController],
+  providers: [AppService,],
 })
 export class AppModule {}

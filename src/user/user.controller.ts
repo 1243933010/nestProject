@@ -2,22 +2,34 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { AuthService } from 'src/modules/auth/auth.service';
 
 @Controller({
   path:'user',
   version:'1'
 })
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly authService:AuthService
+    ) {}
 
   @Post('create')
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
-  @Post()
-  findAll() {
-    return this.userService.findAll('');
+  @Post('login')
+ async findAll(@Body() body:{username:string,password:string}) {
+    const AuthService = await this.authService.validateUser(
+      body.username,body.password
+    )
+    console.log(AuthService,'---')
+    if(AuthService.code==200){
+      // return AuthService;
+      return this.authService.certificate(AuthService);
+    }
+    return {message:AuthService.message,code:AuthService.code};
   }
 
   @Get(':id')

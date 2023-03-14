@@ -1,7 +1,5 @@
 export class CreateUserDto {
-    account :string
-
-    name :string
+    username :string
     
     password :string
 }
