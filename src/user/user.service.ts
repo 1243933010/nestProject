@@ -10,11 +10,15 @@ export class UserService {
   constructor(@InjectRepository(User) private readonly user:Repository<User>){}
 
   async create(createUserDto: CreateUserDto) {
+    let res = await this.user.findOne({where:{username:createUserDto.username}});
+    if(res){
+      return {code:400,message:'当前账户已被注册'}
+    }
     const data = new User();
     data.username = createUserDto.username;
     data.password = createUserDto.password;
 
-      this.user.save(data);
+    this.user.save(data);
     return {message:'添加成功'};
   }
 
@@ -23,6 +27,17 @@ export class UserService {
     return res;
   }
 
+  async getUserInfo(name:string){
+    let res = await this.user.findOne({where:{username:name}})
+    if(!res){
+      return {message:'无数据'}
+    }
+    let {id,password,...data} = res;
+    return data;
+  }
+
+
+  
   findOne(id: number) {
     return `This action returns a #${id} user`;
   }

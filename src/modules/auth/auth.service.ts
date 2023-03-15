@@ -7,19 +7,7 @@ export class AuthService {
     constructor(
         private readonly jwtService:JwtService,
         private readonly userService:UserService
-    ){
-        // this.userService = userService;
-    }
-
-    // async createToken(user){
-    //     const payload = {username:user.name,password:user.password};
-    //     //接下来应该调数据库查看用户是否正确
-    //     delete user.password;
-    //     return {
-    //         message:'创建token成功',
-    //         //token:this.jwtService.sign(payload)
-    //     }
-    // }
+    ){ }
     async validateUser(username: string, password: string): Promise<any> {
         console.log('JWT验证 - Step 2: 校验用户信息');
         const user = await this.userService.findAll(username);

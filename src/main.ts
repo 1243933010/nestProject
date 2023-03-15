@@ -19,6 +19,6 @@ async function bootstrap() {
   app.useGlobalInterceptors(new Respon());  //全局响应拦截
   app.useGlobalFilters(new HttpFilter());   //全局异常过滤器
   app.use(MiddleWareAll);
-  await app.listen(3000);
+  await app.listen(3003);
 }
 bootstrap();

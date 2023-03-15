@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete,UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthService } from 'src/modules/auth/auth.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller({
   path:'user',
@@ -32,9 +33,17 @@ export class UserController {
     return {message:AuthService.message,code:AuthService.code};
   }
 
+  @UseGuards(AuthGuard('jwt'))
+  @Post('userInfo')
+  async getUserInfo(@Body() body:{username:string,password:string}) {
+    return this.userService.getUserInfo(body.username)
+   }
+
+
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+    return {message:'success'}
+    // return this.userService.findOne(+id);
   }
 
   @Patch(':id')
