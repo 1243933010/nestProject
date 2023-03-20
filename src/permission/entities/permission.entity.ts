@@ -1,24 +1,28 @@
 import { Entity,Column,PrimaryGeneratedColumn,Generated,CreateDateColumn } from "typeorm";
 
 @Entity()
-export class User {
+export class Permission {
     @PrimaryGeneratedColumn()
     id:number
 
-    
-
-    @Column()
-    username :string
-
-    @Column()
-    password :string
-
     @Column()
     role:string
-    
-    // @Generated('uuid')
-    // uuid:string
 
-    // @CreateDateColumn({type:"timestamp"})
-    // createTime:Date
+    @Column()
+    parent_id:number
+
+    @Column()
+    menu_name:string
+
+    @Column()
+    icon:string
+
+    @Column()
+    redirect:string
+
+    @Column()
+    route_name:string
+
+    
+
 }

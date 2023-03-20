@@ -4,10 +4,15 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository,Like } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import {User} from './entities/user.entity'
+import { Permission } from 'src/permission/entities/permission.entity';
+import { CreatePermissionDto } from 'src/permission/dto/create-permission.dto';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectRepository(User) private readonly user:Repository<User>){}
+  constructor(
+    @InjectRepository(User) private readonly user:Repository<User>,
+    @InjectRepository(Permission) private readonly permission:Repository<Permission>
+  ){}
 
   async create(createUserDto: CreateUserDto) {
     let res = await this.user.findOne({where:{username:createUserDto.username}});
@@ -17,6 +22,7 @@ export class UserService {
     const data = new User();
     data.username = createUserDto.username;
     data.password = createUserDto.password;
+    data.role = 'common';//默认设置为普通角色
 
     this.user.save(data);
     return {message:'添加成功'};
@@ -32,6 +38,8 @@ export class UserService {
     if(!res){
       return {message:'无数据'}
     }
+    let result = await this.permission.find({where:{role:res.role}})
+    console.log(result);
     let {id,password,...data} = res;
     return data;
   }

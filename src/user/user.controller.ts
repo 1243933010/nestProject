@@ -25,7 +25,7 @@ export class UserController {
     const AuthService = await this.authService.validateUser(
       body.username,body.password
     )
-    console.log(AuthService,'---')
+    //console.log(AuthService,'---')
     if(AuthService.code==200){
       // return AuthService;
       return this.authService.certificate(AuthService);

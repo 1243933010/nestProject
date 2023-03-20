@@ -5,6 +5,7 @@ import { UserModule } from './user/user.module';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserController } from './user/user.controller';
+import { PermissionModule } from './permission/permission.module';
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import { UserController } from './user/user.controller';
       retryAttempts:10,
       autoLoadEntities:true
 
-    })
+    }),
+    PermissionModule
   ],
   controllers: [AppController,UserController],
   providers: [AppService,],
