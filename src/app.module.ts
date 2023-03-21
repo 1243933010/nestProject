@@ -7,9 +7,13 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UserController } from './user/user.controller';
 import { PermissionModule } from './permission/permission.module';
 import { UploadModule } from './upload/upload.module';
+import { ConfigModule } from '@nestjs/config'
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath:['.env.dev','.env']
+    }),
     UserModule,
     AuthModule,
     TypeOrmModule.forRoot({
@@ -30,6 +34,6 @@ import { UploadModule } from './upload/upload.module';
     UploadModule
   ],
   controllers: [AppController,UserController],
-  providers: [AppService,],
+  providers: [AppService],
 })
 export class AppModule {}

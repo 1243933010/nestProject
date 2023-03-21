@@ -20,7 +20,7 @@ export class UploadController {
   @UseInterceptors(FileInterceptor('file'))
   upload(@UploadedFile() file) {
     console.log(file)
-    return {message:true}
+    return this.uploadService.upload(file);
   }
 
   @Get()

@@ -13,6 +13,7 @@ function MiddleWareAll(req:Request,res:Response,next:NextFunction){  //全局中
 }
 
 async function bootstrap() {
+
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.enableVersioning({    //给当前所有接口添加版本前缀比如/v1
     type:VersioningType.URI
@@ -20,6 +21,7 @@ async function bootstrap() {
   app.useStaticAssets(join(__dirname,'./../src/images'),{
     prefix:'/images'
   })
+  
   app.useGlobalInterceptors(new Respon());  //全局响应拦截
   app.useGlobalFilters(new HttpFilter());   //全局异常过滤器
   app.use(MiddleWareAll);
