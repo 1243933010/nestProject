@@ -40,6 +40,13 @@ export class UserController {
    }
 
 
+   @UseGuards(AuthGuard('jwt'))
+   @Post('updateUserInfo')
+   async updateUserInfo(@Body() body:object) {
+     return this.userService.updateUserInfo(body)
+    }
+ 
+   
   @Get(':id')
   findOne(@Param('id') id: string) {
     return {message:'success'}

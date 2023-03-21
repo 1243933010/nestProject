@@ -6,6 +6,7 @@ import {TypeOrmModule} from '@nestjs/typeorm';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserController } from './user/user.controller';
 import { PermissionModule } from './permission/permission.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -25,7 +26,8 @@ import { PermissionModule } from './permission/permission.module';
       autoLoadEntities:true
 
     }),
-    PermissionModule
+    PermissionModule,
+    UploadModule
   ],
   controllers: [AppController,UserController],
   providers: [AppService,],

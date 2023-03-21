@@ -15,6 +15,9 @@ export class User {
 
     @Column()
     role:string
+
+    @Column()
+    avatar:string
     
     // @Generated('uuid')
     // uuid:string

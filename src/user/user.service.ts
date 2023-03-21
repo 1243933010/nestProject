@@ -39,12 +39,14 @@ export class UserService {
       return {message:'无数据'}
     }
     let result = await this.permission.find({where:{role:res.role}})
-    console.log(result);
+    console.log(result,'===');
     let {id,password,...data} = res;
     return data;
   }
 
-
+  async updateUserInfo(body){
+    
+  }
   
   findOne(id: number) {
     return `This action returns a #${id} user`;
