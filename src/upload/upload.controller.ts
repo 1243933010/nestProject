@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete,UseInterceptors,UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete,UseInterceptors,UploadedFile,UseGuards } from '@nestjs/common';
 import { UploadService } from './upload.service';
 import { CreateUploadDto } from './dto/create-upload.dto';
 import { UpdateUploadDto } from './dto/update-upload.dto';
 import {FileInterceptor} from '@nestjs/platform-express'
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller({
   path:'upload',
@@ -16,6 +17,8 @@ export class UploadController {
     return this.uploadService.create(createUploadDto);
   }
 
+  
+  @UseGuards(AuthGuard('jwt'))
   @Post('album')
   @UseInterceptors(FileInterceptor('file'))
   upload(@UploadedFile() file) {

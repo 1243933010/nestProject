@@ -45,7 +45,11 @@ export class UserService {
   }
 
   async updateUserInfo(body){
-    
+    let {password,id,...res} = body;
+    console.log(res)
+    let result = await this.user.update(id,res);
+    console.log(result);
+    return {message:'更新用户信息成功'}
   }
   
   findOne(id: number) {

@@ -4,7 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthService } from 'src/modules/auth/auth.service';
 import { AuthGuard } from '@nestjs/passport';
-
+import {UserPipe} from './user.pipe'
 @Controller({
   path:'user',
   version:'1'
@@ -42,7 +42,7 @@ export class UserController {
 
    @UseGuards(AuthGuard('jwt'))
    @Post('updateUserInfo')
-   async updateUserInfo(@Body() body:object) {
+   async updateUserInfo(@Body(UserPipe) body:UpdateUserDto) {
      return this.userService.updateUserInfo(body)
     }
  

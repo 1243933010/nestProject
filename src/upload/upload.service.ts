@@ -18,7 +18,7 @@ export class UploadService {
   }
 
   upload(file:{filename:string}){
-    console.log(file,process.env.RUNNING_ENV ,'-----')
+    //console.log(file,process.env.RUNNING_ENV ,'-----')
     return {url:`${process.env.UPLOAD_URL}/images/${file.filename}`}
   }
 
