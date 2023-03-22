@@ -9,10 +9,16 @@ import { PermissionModule } from './permission/permission.module';
 import { UploadModule } from './upload/upload.module';
 import { ConfigModule } from '@nestjs/config'
 
+let envFilePath = ['.env'];
+if(process.env.RUNNING_ENV=='dev'){
+  envFilePath.push('.env.dev')
+}else{
+  envFilePath.push('.env.pro')
+}
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath:['.env.dev','.env']
+      envFilePath
     }),
     UserModule,
     AuthModule,

@@ -4,7 +4,7 @@ import { UploadController } from './upload.controller';
 import { MulterModule } from '@nestjs/platform-express';
 import {diskStorage} from 'multer'
 import {extname,join} from 'path'
-import { ConfigService } from '@nestjs/config';
+// import { ConfigService } from '@nestjs/config';
 @Module({
   imports:[
     MulterModule.register({
@@ -17,6 +17,6 @@ import { ConfigService } from '@nestjs/config';
     })
   })],
   controllers: [UploadController],
-  providers: [UploadService,ConfigService]
+  providers: [UploadService]  //ConfigService
 })
 export class UploadModule {}

@@ -17,9 +17,9 @@ export class UploadService {
     return `This action returns a #${id} upload`;
   }
 
-  upload(file:object){
-    console.log(process.env.test,process.env.UPLOAD_URL,process.env.RUNNING_ENV ,'-----')
-    return {}
+  upload(file:{filename:string}){
+    console.log(file,process.env.RUNNING_ENV ,'-----')
+    return {url:`${process.env.UPLOAD_URL}/images/${file.filename}`}
   }
 
   update(id: number, updateUploadDto: UpdateUploadDto) {
