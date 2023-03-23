@@ -13,11 +13,11 @@ export class AuthService {
         const user = await this.userService.findAll(username);
         // 注：实际中的密码处理应通过加密措施
         if(!user){
-          return {code:0,message:'查无此人'}
+          return {code:400,message:'查无此人'}
         }
         if (user && user.password === password) {
           const { password, ...userInfo } = user;
-          return {...userInfo,code:200,message:'success'};
+          return {...userInfo,code:0,message:'success'};
         } else {
           return {code:1,message:'密码错误'}
         }
@@ -40,7 +40,7 @@ export class AuthService {
       };
     } catch (error) {
       return {
-        code: 600,
+        code: 400,
         msg: `账号或密码错误`,
       };
     }

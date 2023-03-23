@@ -4,14 +4,16 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository,Like } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import {User} from './entities/user.entity'
+import {UserLabel} from './entities/userLabel.tntity'
 import { Permission } from 'src/permission/entities/permission.entity';
-import { CreatePermissionDto } from 'src/permission/dto/create-permission.dto';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private readonly user:Repository<User>,
-    @InjectRepository(Permission) private readonly permission:Repository<Permission>
+    @InjectRepository(Permission) private readonly permission:Repository<Permission>,
+    @InjectRepository(UserLabel) private readonly userLabel:Repository<UserLabel>
+
   ){}
 
   async create(createUserDto: CreateUserDto) {
@@ -34,24 +36,47 @@ export class UserService {
   }
 
   async getUserInfo(name:string){
-    let res = await this.user.findOne({where:{username:name}})
+    let res = await this.user.findOne({relations:['userLabel'], where:{username:name}})
     if(!res){
       return {message:'无数据'}
     }
     let result = await this.permission.find({where:{role:res.role}})
-    console.log(result,'===');
+    //console.log(result,'===');
     let {id,password,...data} = res;
     return data;
   }
 
   async updateUserInfo(body){
-    let {password,id,...res} = body;
+    let {password,id,labelList,...res} = body;
     console.log(res)
+    if(labelList){
+      let data = await this.updateLabel(id,labelList);
+      await this.deleteLabel();
+    }
     let result = await this.user.update(id,res);
-    console.log(result);
+   console.log(result);
     return {message:'更新用户信息成功'}
   }
   
+  async updateLabel(id:number,labelList:any[]){
+    let labelArr = labelList;
+    const tableDetail = await this.user.findOne({where:{id:id}});
+    const tagList:UserLabel[] = [];
+    for(let i = 0;i<labelArr.length;i++){
+      let T = new UserLabel();
+       T.label = labelArr[i].label;
+      
+      await this.userLabel.save(T)
+      tagList.push(T);
+    }
+   tableDetail.userLabel = tagList;
+   this.user.save(tableDetail);
+
+  }
+  async deleteLabel(){
+   let data = await this.userLabel.find({})
+   console.log(data,'===')
+  }
   findOne(id: number) {
     return `This action returns a #${id} user`;
   }

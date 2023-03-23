@@ -26,8 +26,7 @@ export class UserController {
       body.username,body.password
     )
     //console.log(AuthService,'---')
-    if(AuthService.code==200){
-      // return AuthService;
+    if(AuthService.code==0){
       return this.authService.certificate(AuthService);
     }
     return {message:AuthService.message,code:AuthService.code};
