@@ -10,6 +10,9 @@ export class Respon<T> implements NestInterceptor{
         intercept(context, next: CallHandler):Observable<Data<T>>{
             return next.handle().pipe(map(data=>{
                 let result = JSON.parse(JSON.stringify(data));
+                // if(typeof result == 'string'){
+                //     return result;
+                // }
                 Reflect.deleteProperty(result,'message')
                 Reflect.deleteProperty(result,'code')
                 return {
