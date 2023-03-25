@@ -5,7 +5,7 @@ export class Invitation {
     id:number
 
     @Generated('uuid')
-    uuid:string
+    uuid:number
 
     @Column()
     userId:number

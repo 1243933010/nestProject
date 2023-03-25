@@ -42,7 +42,7 @@ export class UserService {
     }
     let result = await this.permission.find({where:{role:res.role}})
     //console.log(result,'===');
-    let {id,password,...data} = res;
+    let {password,...data} = res;
     return data;
   }
 
