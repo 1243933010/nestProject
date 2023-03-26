@@ -1,4 +1,4 @@
-import { Entity,Column,PrimaryGeneratedColumn,Generated,CreateDateColumn,OneToMany,UpdateDateColumn } from "typeorm";
+import { Entity,Column,PrimaryGeneratedColumn,Generated,CreateDateColumn,OneToMany,UpdateDateColumn,BeforeInsert } from "typeorm";
 @Entity()
 export class Invitation {
     @PrimaryGeneratedColumn()
@@ -15,11 +15,17 @@ export class Invitation {
 
     @Column()
     content:string
-    
-    @CreateDateColumn()
-    createTime:string
+    @Column({ type: 'timestamp' })
+    createTime: string;
 
-    @UpdateDateColumn()
-    updateTime:string
+    @BeforeInsert()
+    setCreateDate() {
+        this.createTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    }
+    // @CreateDateColumn()
+    // createTime:string
+
+    // @UpdateDateColumn()
+    // updateTime:string
 
 }
