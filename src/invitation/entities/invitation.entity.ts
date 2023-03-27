@@ -1,6 +1,6 @@
 
 
-import { Entity,Column,PrimaryGeneratedColumn,Generated,CreateDateColumn,OneToMany,UpdateDateColumn,BeforeInsert } from "typeorm";
+import { Entity,Column,PrimaryGeneratedColumn,Generated,BeforeInsert } from "typeorm";
 @Entity()
 export class Invitation {
     @PrimaryGeneratedColumn()
