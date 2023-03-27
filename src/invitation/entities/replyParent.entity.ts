@@ -7,6 +7,9 @@ export class ReplyParent{
     id:number
 
     @Column()
+    invitationId:number
+    
+    @Column()
     userName:string
 
     @Column()
