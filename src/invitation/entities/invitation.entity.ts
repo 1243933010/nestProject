@@ -1,11 +1,11 @@
-import { Entity,Column,PrimaryGeneratedColumn,Generated,CreateDateColumn,OneToMany,UpdateDateColumn } from "typeorm";
+import { Entity,Column,PrimaryGeneratedColumn,Generated,CreateDateColumn,OneToMany } from "typeorm";
 @Entity()
 export class Invitation {
     @PrimaryGeneratedColumn()
     id:number
 
     @Generated('uuid')
-    uuid:number
+    uuid:string
 
     @Column()
     userId:number
@@ -15,11 +15,5 @@ export class Invitation {
 
     @Column()
     content:string
-    
-    @CreateDateColumn()
-    createTime:string
-
-    @UpdateDateColumn()
-    updateTime:string
 
 }
