@@ -3,8 +3,10 @@ import { CreateInvitationDto } from './dto/create-invitation.dto';
 import { UpdateInvitationDto } from './dto/update-invitation.dto';
 import { Invitation } from './entities/invitation.entity'
 import { User } from 'src/user/entities/user.entity';
+import { Reply } from './entities/reply.tntity';
+import { ReplyParent } from './entities/replyParent.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, Like, Repository } from 'typeorm';
+import { Between, Like, Repository,Connection,DataSource,getConnection,getManager,getConnectionManager ,getConnectionOptions,createConnection } from 'typeorm';
 import { FindAll } from './interface';
 
 @Injectable()
@@ -12,6 +14,10 @@ export class InvitationService {
   constructor(
     @InjectRepository(Invitation) private readonly invitation: Repository<Invitation>,
     @InjectRepository(User) private readonly user: Repository<User>,
+    @InjectRepository(Reply) private readonly reply: Repository<Reply>,
+    @InjectRepository(ReplyParent) private readonly replyParent: Repository<ReplyParent>,
+    private readonly connection:Connection
+
 
   ) { }
   async create(createInvitationDto: CreateInvitationDto) {
@@ -58,12 +64,12 @@ export class InvitationService {
     }
   }
 
-  async update(id: number, updateInvitationDto: UpdateInvitationDto,req:{user:{id:number}}) {
+  async update(id: number, updateInvitationDto: UpdateInvitationDto, req: { user: { id: number } }) {
     try {
       let res = await this.invitation.findOne({ where: { id } })
-      let result = await this.user.findOne({ where: { id: req.user.id } })  
+      let result = await this.user.findOne({ where: { id: req.user.id } })
       if (result.id == res.userId) {
-        let data = await this.invitation.update(id,updateInvitationDto)
+        let data = await this.invitation.update(id, updateInvitationDto)
         if (data) {
           return { message: '修改成功' }
         }
@@ -72,9 +78,9 @@ export class InvitationService {
       }
     } catch (error) {
       console.log(error)
-      return {message:error.message,code:400}
+      return { message: error.message, code: 400 }
     }
-    
+
   }
 
   async remove(id: number, user: { id: number }) {
@@ -95,4 +101,78 @@ export class InvitationService {
     }
 
   }
+
+  async addComment(body, req) {
+    if (body.parentId) {
+    return   this.saveReply(body, req.user)
+    }else{
+     return this.saveReplyParent(body, req.user)
+    }
+   
+  }
+
+  async saveReply(body, user) {
+
+    // let connection = await createConnection({
+    //   type: 'mysql',
+    //   host: 'localhost',
+    //   port: 3306,
+    //   username: 'root',
+    //   password: 'ChongShao123',
+    //   database: 'nuxtproject',
+    //   name: 'default', // 指定连接的名称为 "myConnection"
+    //   entities:[Reply,ReplyParent],
+    //   synchronize: true
+    //   });
+    
+
+    const queryRunner =this.connection.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      
+      
+        let reply = new Reply();
+        reply.context = body.context;
+        reply.parentId = body.parentId;
+        reply.invitationId = body.invitationId;
+        reply.userId = user.id;
+        reply.userName = user.username;
+       
+        let data = await  queryRunner.manager.save(reply)
+        console.log(data,'=============')
+        let result = await queryRunner.manager.findOne(Reply,{where:{id:2}})
+        console.log(result,'=============')
+        // await queryRunner.manager.close()
+        return {}
+      
+    } catch (error) {
+      console.log(error,'======')
+      return { code: 400, message: error.message };
+    }finally{
+      // await connection.close()
+      return {}
+    }
+  }
+
+  async saveReplyParent(body, user) {
+    try {
+      let replyParent = new ReplyParent();
+      replyParent.context = body.context;
+      replyParent.invitationId = body.invitationId;
+      replyParent.userId = user.id;
+      replyParent.userName = user.username;
+      replyParent.commnetNum = 1;
+      let data = await this.replyParent.save(replyParent)
+      
+      console.log(data)
+      if(data){
+        return {message:"保存成功"}
+      }
+    } catch (error) {
+      return { code: 400, message: error.message };
+
+    }
+  }
+
 }

@@ -8,7 +8,7 @@ export class Reply{
 
     @Column()
     invitationId:number
-    
+
     @Column()
     userName:string
 
@@ -20,6 +20,8 @@ export class Reply{
 
     @Column()
     parentId:number
+
+    
 
     @ManyToOne(()=>ReplyParent,(replyParent)=>replyParent.reply)
 
