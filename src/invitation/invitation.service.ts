@@ -5,8 +5,8 @@ import { Invitation } from './entities/invitation.entity'
 import { User } from 'src/user/entities/user.entity';
 import { Reply } from './entities/reply.tntity';
 import { ReplyParent } from './entities/replyParent.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Between, Like, Repository,Connection,DataSource,getConnection,getManager,getConnectionManager ,getConnectionOptions,createConnection } from 'typeorm';
+import {  InjectRepository } from '@nestjs/typeorm';
+import { Between, Like, Repository,DataSource} from 'typeorm';
 import { FindAll } from './interface';
 
 @Injectable()
@@ -16,7 +16,8 @@ export class InvitationService {
     @InjectRepository(User) private readonly user: Repository<User>,
     @InjectRepository(Reply) private readonly reply: Repository<Reply>,
     @InjectRepository(ReplyParent) private readonly replyParent: Repository<ReplyParent>,
-    private readonly connection:Connection
+    // @InjectConnection() private readonly connection:Connection
+    private dataSource: DataSource
 
 
   ) { }
@@ -112,47 +113,29 @@ export class InvitationService {
   }
 
   async saveReply(body, user) {
-
-    // let connection = await createConnection({
-    //   type: 'mysql',
-    //   host: 'localhost',
-    //   port: 3306,
-    //   username: 'root',
-    //   password: 'ChongShao123',
-    //   database: 'nuxtproject',
-    //   name: 'default', // 指定连接的名称为 "myConnection"
-    //   entities:[Reply,ReplyParent],
-    //   synchronize: true
-    //   });
-    
-
-    const queryRunner =this.connection.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
     try {
-      
-      
+      let res =  await this.dataSource.transaction(async (transactionalEntityManager)=>{
         let reply = new Reply();
-        reply.context = body.context;
-        reply.parentId = body.parentId;
-        reply.invitationId = body.invitationId;
-        reply.userId = user.id;
-        reply.userName = user.username;
-       
-        let data = await  queryRunner.manager.save(reply)
-        console.log(data,'=============')
-        let result = await queryRunner.manager.findOne(Reply,{where:{id:2}})
-        console.log(result,'=============')
-        // await queryRunner.manager.close()
-        return {}
-      
+          reply.context = body.context;
+          reply.parentId = body.parentId;
+          reply.invitationId = body.invitationId;
+          reply.userId = user.id;
+          reply.userName = user.username;
+         
+          let data = await  transactionalEntityManager.save(reply)
+          if(!data)return {code:400,message:'评论失败'}
+          let result = await transactionalEntityManager.findOne(ReplyParent,{where:{id:body.parentId}})
+          if(!result)return {code:400,message:'查询失败'}
+          result.commnetNum=result.commnetNum+1;
+          transactionalEntityManager.update(ReplyParent,body.parentId,result);
+          console.log(result);
+          return {code:0,message:"评论成功"}
+      })
+      return res;
     } catch (error) {
-      console.log(error,'======')
-      return { code: 400, message: error.message };
-    }finally{
-      // await connection.close()
-      return {}
+      return {code:400,message:error.message}
     }
+    
   }
 
   async saveReplyParent(body, user) {
@@ -167,7 +150,7 @@ export class InvitationService {
       
       console.log(data)
       if(data){
-        return {message:"保存成功"}
+        return {message:"回复成功"}
       }
     } catch (error) {
       return { code: 400, message: error.message };

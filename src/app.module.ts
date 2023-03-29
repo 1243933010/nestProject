@@ -34,8 +34,7 @@ if(process.env.RUNNING_ENV=='dev'){
       synchronize:true,
       retryDelay:500,
       retryAttempts:10,
-      autoLoadEntities:true,
-      name:'default'
+      autoLoadEntities:true
     }),
     PermissionModule,
     UploadModule,
