@@ -1,4 +1,4 @@
-import { Injectable, Request } from '@nestjs/common';
+import { Injectable, Request,Inject } from '@nestjs/common';
 import { CreateInvitationDto } from './dto/create-invitation.dto';
 import { UpdateInvitationDto } from './dto/update-invitation.dto';
 import { Invitation } from './entities/invitation.entity'
@@ -8,7 +8,6 @@ import { ReplyParent } from './entities/replyParent.entity';
 import {  InjectRepository } from '@nestjs/typeorm';
 import { Between, Like, Repository,DataSource} from 'typeorm';
 import { FindAll } from './interface';
-
 @Injectable()
 export class InvitationService {
   constructor(
@@ -16,10 +15,7 @@ export class InvitationService {
     @InjectRepository(User) private readonly user: Repository<User>,
     @InjectRepository(Reply) private readonly reply: Repository<Reply>,
     @InjectRepository(ReplyParent) private readonly replyParent: Repository<ReplyParent>,
-    // @InjectConnection() private readonly connection:Connection
     private dataSource: DataSource
-
-
   ) { }
   async create(createInvitationDto: CreateInvitationDto) {
     let data = new Invitation();
@@ -160,11 +156,13 @@ export class InvitationService {
 
 
   async getComment(id){
-    console.log(id)
+
     let res = await this.replyParent.find({where:{id}})
+    // throw '111'
     if(res){
       return {data:res}
     }
+    
     return {code:400,message:'请求失败'}
   }
 

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import {  Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
@@ -9,6 +9,8 @@ import { PermissionModule } from './permission/permission.module';
 import { UploadModule } from './upload/upload.module';
 import { ConfigModule } from '@nestjs/config'
 import { InvitationModule } from './invitation/invitation.module';
+
+
 
 let envFilePath = ['.env'];
 if(process.env.RUNNING_ENV=='dev'){
@@ -38,7 +40,7 @@ if(process.env.RUNNING_ENV=='dev'){
     }),
     PermissionModule,
     UploadModule,
-    InvitationModule
+    InvitationModule,
   ],
   controllers: [AppController,UserController],
   providers: [AppService],
