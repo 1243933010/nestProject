@@ -158,4 +158,24 @@ export class InvitationService {
     }
   }
 
+
+  async getComment(id){
+    console.log(id)
+    let res = await this.replyParent.find({where:{id}})
+    if(res){
+      return {data:res}
+    }
+    return {code:400,message:'请求失败'}
+  }
+
+  async getReply(id){
+    console.log(id)
+    let res = await this.reply.find({where:{invitationId:id}})
+    if(res){
+      return {data:res}
+    }
+    return {code:400,message:'请求失败'}
+  }
+
+  
 }

@@ -51,4 +51,16 @@ export class InvitationController {
     return this.invitationService.addComment(body,req);
   }
 
+  @UseGuards(AuthGuard('jwt'))
+  @Get('comment/:id')
+  getComment(@Param() param:{id:string}){
+    return this.invitationService.getComment(+param.id);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('reply/:id')
+  getReply(@Param() param:{id:string}){
+    return this.invitationService.getReply(+param.id);
+  }
+  
 }
