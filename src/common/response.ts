@@ -6,7 +6,6 @@ import { Logger } from 'winston';
 interface Data<T>{
     data:T
 }
-
 @Injectable()
 export class Respon<T> implements NestInterceptor{
     

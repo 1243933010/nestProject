@@ -9,7 +9,8 @@ import { PermissionModule } from './permission/permission.module';
 import { UploadModule } from './upload/upload.module';
 import { ConfigModule } from '@nestjs/config'
 import { InvitationModule } from './invitation/invitation.module';
-
+import { ScheduleModule } from '@nestjs/schedule';
+import { ScheduleService } from './modules/schedule/schedule.service';
 
 
 let envFilePath = ['.env'];
@@ -41,8 +42,9 @@ if(process.env.RUNNING_ENV=='dev'){
     PermissionModule,
     UploadModule,
     InvitationModule,
+    ScheduleModule.forRoot()
   ],
   controllers: [AppController,UserController],
-  providers: [AppService],
+  providers: [AppService,  ScheduleService],
 })
 export class AppModule {}

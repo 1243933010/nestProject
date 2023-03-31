@@ -3,6 +3,7 @@ import { createLogger, format } from 'winston';
 import * as winston from 'winston'
 
 export const WinstonClass = () => {
+    console.log('----')
     return createLogger({
         level: 'info',
         format: format.json(),

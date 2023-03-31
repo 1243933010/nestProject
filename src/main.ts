@@ -6,8 +6,8 @@ import {Request,Response,NextFunction } from 'express'
 import {Respon} from './common/response'
 import {HttpFilter} from './common/filter'
 import { join } from 'path'
-import { createLogger,format} from 'winston';
-import * as winston from 'winston'
+// import { createLogger,format} from 'winston';
+// import * as winston from 'winston'
 import 'winston-daily-rotate-file'
 import { WinstonClass } from './common/winston';
 
@@ -28,7 +28,7 @@ async function bootstrap() {
     prefix:'/images'
   })
   
-  app.useGlobalInterceptors(new Respon( WinstonClass()));  //全局响应拦截
+  app.useGlobalInterceptors(new Respon(WinstonClass()));  //全局响应拦截
   app.useGlobalFilters(new HttpFilter(WinstonClass()));   //全局异常过滤器
   app.use(MiddleWareAll);
   await app.listen(3003);
