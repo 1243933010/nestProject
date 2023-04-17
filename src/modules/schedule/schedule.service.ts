@@ -1,6 +1,6 @@
 import { Injectable, Inject ,Logger as defaultLogger} from '@nestjs/common';
 import { Cron,Interval,Timeout } from '@nestjs/schedule';
-import { Logger } from 'winston';
+// import { Logger } from 'winston';
 import { WinstonClass } from '../../common/winston';
 @Injectable()
 export class ScheduleService {
